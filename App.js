@@ -5,15 +5,17 @@ import Weather from "./Weather";
 export default class App extends Component {
   state = {
     isLoaded: false,
-    error: null
+    error: null,
+    temperature: null,
+    name: null
   };
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        this.setState({
-          isLoaded: true
-        });
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        this._getWeather(lat, lon);
       },
       error => {
         this.setState({
@@ -22,6 +24,21 @@ export default class App extends Component {
       }
     );
   }
+
+  _getWeather = (lat, lon) => {
+    const API_KEY = "9df02812a15dc211a55a85c929651b05";
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+    )
+      .then(response => response.json())
+      .then(json =>
+        this.setState({
+          temperature: json.main.temp,
+          name: json.weather[0].main,
+          isLoaded: true
+        })
+      );
+  };
 
   render() {
     const { isLoaded, error } = this.state;
