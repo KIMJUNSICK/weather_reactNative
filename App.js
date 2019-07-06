@@ -4,7 +4,8 @@ import Weather from "./Weather";
 
 export default class App extends Component {
   state = {
-    isLoaded: false
+    isLoaded: false,
+    error: null
   };
 
   componentDidMount() {
@@ -15,13 +16,15 @@ export default class App extends Component {
         });
       },
       error => {
-        console.log(error);
+        this.setState({
+          error: error
+        });
       }
     );
   }
 
   render() {
-    const { isLoaded } = this.state;
+    const { isLoaded, error } = this.state;
 
     return (
       <View style={styles.container}>
@@ -33,6 +36,7 @@ export default class App extends Component {
             <Text style={styles.loadingText}>
               Getting the Weather of Today . . .
             </Text>
+            {error ? <Text style={styles.error}>{error}</Text> : null}
           </View>
         )}
       </View>
@@ -53,6 +57,10 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 30,
-    marginBottom: 93
+    marginBottom: 24
+  },
+  error: {
+    color: "red",
+    marginBottom: 30
   }
 });
