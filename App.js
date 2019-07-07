@@ -6,8 +6,9 @@ export default class App extends Component {
   state = {
     isLoaded: false,
     error: null,
+    name: null,
     temperature: null,
-    name: null
+    description: null
   };
 
   componentDidMount() {
@@ -33,21 +34,26 @@ export default class App extends Component {
       .then(response => response.json())
       .then(json =>
         this.setState({
-          temperature: json.main.temp,
           name: json.weather[0].main,
+          temperature: json.main.temp,
+          description: json.weather[0].description,
           isLoaded: true
         })
       );
   };
 
   render() {
-    const { isLoaded, error } = this.state;
+    const { isLoaded, error, description, temperature, name } = this.state;
 
     return (
       <View style={styles.container}>
         <StatusBar hidden={true} />
         {isLoaded ? (
-          <Weather />
+          <Weather
+            desc={description}
+            temp={temperature}
+            weatherName={"Tornado"}
+          />
         ) : (
           <View style={styles.loading}>
             <Text style={styles.loadingText}>
